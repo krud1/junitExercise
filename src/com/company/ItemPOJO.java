@@ -2,12 +2,12 @@ package com.company;
 
 import java.math.BigDecimal;
 
-public class BasketModel {
-    private String name;
-    private double price;
+public class ItemPOJO {
+    protected String name;
+    protected double price;
     protected int quantity;
 
-    public BasketModel(String name, double price, int quantity) {
+    public ItemPOJO(String name, double price, int quantity) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;

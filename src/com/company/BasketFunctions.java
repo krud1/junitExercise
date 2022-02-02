@@ -1,8 +1,10 @@
 package com.company;
 
+import java.util.Map;
+
 public interface BasketFunctions {
 
-    void addItem(BasketModel basketModel);
+    void addItem(String key, ItemPOJO itemPOJO);
     void deleteItem(String key);
-    double getPrice(BasketList basketList);
+    double getPrice();
 }

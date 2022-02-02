@@ -2,37 +2,49 @@ package com.company;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
-public class BasketList implements BasketFunctions{
+public class BasketList implements BasketFunctions {
 
-    Map<String, BasketModel> list = new HashMap<>();
+    Map<String, ItemPOJO> list;
+
+    public BasketList(Map<String, ItemPOJO> list) {
+        this.list = list;
+    }
 
     @Override
-    public void addItem(BasketModel basketModel) {
-        if(basketModel.getQuantity() < 1){
+    public void addItem(String key, ItemPOJO itemPOJO) {
+        if(itemPOJO.getQuantity() < 1) {
             System.out.println("Quantity can not be less than 1");
-        } else if (list.containsKey(basketModel.getName())){
-            int i = list.get(basketModel.getName()).quantity;
-            list.get(basketModel.getName())
-                    .setQuantity(basketModel.getQuantity()+i);
+            throw new IllegalStateException();
+        } else if (list.containsKey(key)){
+            int i = itemPOJO.quantity + list.get(key).quantity;
+            if(i<0){
+                System.out.println("Removing items may not result in negative amount");
+                throw new IllegalStateException();
+            }
+            else {
+                itemPOJO.setQuantity(i);
+                list.put(key, itemPOJO);
+            }
         } else {
-            list.put(basketModel.getName(), basketModel);
+            list.put(key, itemPOJO);
         }
     }
 
     @Override
     public void deleteItem(String key) {
-        if(list.containsKey(key)){
-            list.remove(key);
-            System.out.println("Deleted item from list: " + key);
-        }else {
-            System.out.println("Item with given keyword does not exist");
+            if(list.containsKey(key)){
+                list.remove(key);
+                System.out.println("Deleted item from list: " + key);
+            } else {
+                throw new NoSuchElementException();
         }
     }
 
     @Override
-    public double getPrice(BasketList basketList) {
-        return basketList.list.values()
-                .stream().mapToDouble(basketModel -> basketModel.getQuantity() * basketModel.getPrice()).sum();
+    public double getPrice() {
+        return list.values()
+                .stream().mapToDouble(itemPOJO -> itemPOJO.getQuantity() * itemPOJO.getPrice()).sum();
     }
 }
